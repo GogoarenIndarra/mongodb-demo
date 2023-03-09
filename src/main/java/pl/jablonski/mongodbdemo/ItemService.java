@@ -35,15 +35,11 @@ class ItemService {
     }
 
     List<Item> getItemByName(final String phrase) {
-        return repository.findAll().stream()
-                .filter(var1 -> var1.getDescription().contains(phrase))
-                .toList();
+        return repository.findByPhraseInDescription(phrase);
     }
 
     List<Item> getItemsByCategory(final String category) {
-        return repository.findAll().stream()
-                .filter(var1 -> var1.getCategory().contains(category))
-                .toList();
+        return repository.findByCategory(category);
     }
 
     long findCountOfItems() {
