@@ -1,17 +1,14 @@
-package pl.jablonski.mongodbdemo;
+package pl.jablonski.mongodbdemo.items;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -20,9 +17,19 @@ public class ItemController {
 
     ItemService service;
 
+    @GetMapping("/all")
+    List<Item> getAllItems() {
+        return service.showAllItems();
+    }
+
     @GetMapping("/category/all")
-    Set<String> getAllCategory() {
-        return service.getAllCategory();
+    Category[] getAllCategory() {
+        return Category.values();
+    }
+
+    @GetMapping("/frameworks/all")
+    Set<String> getAllFrameworks() {
+        return service.getAllFrameworks();
     }
 
     @GetMapping("/name/{phrase}")
@@ -31,18 +38,17 @@ public class ItemController {
     }
 
     @GetMapping("/category/{category}")
-    List<Item> getItemByCategory(@PathVariable final String category) {
+    List<Item> getItemByCategory(@PathVariable final Category category) {
         return service.getItemsByCategory(category);
     }
 
-    @GetMapping("/all")
-    List<Item> getAllItems() {
-        return service.showAllItems();
+    @GetMapping("/frameworks/{framework}")
+    List<Item> getItemByFrameworks(@PathVariable final String framework) {
+        return service.getItemByFramework(framework);
     }
 
     @PostMapping
-    Item addItem(@RequestBody final ItemDto itemDto) throws MalformedURLException {
-        log.info("Creating item from dto: {}", itemDto);
+    Item addItem(@RequestBody final ItemDto itemDto) {
         return service.createItem(itemDto);
     }
 

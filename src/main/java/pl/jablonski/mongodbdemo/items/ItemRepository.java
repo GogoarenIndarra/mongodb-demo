@@ -1,4 +1,4 @@
-package pl.jablonski.mongodbdemo;
+package pl.jablonski.mongodbdemo.items;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -13,11 +13,11 @@ interface ItemRepository extends MongoRepository<Item, UUID> {
     Optional<Item> findById(UUID id);
 
     @Query("{ category: ?0 }")
-    List<Item> findByCategory(String category);
+    List<Item> findByCategory(Category category);
+
+    @Query("{ frameworks: ?0 }")
+    List<Item> findByFramework(String frameworks);
 
     @Query("{ description: { $regex: ?0, $options: 'i' } }")
     List<Item> findByPhraseInDescription(String phrase);
-
-    long count();
-
 }

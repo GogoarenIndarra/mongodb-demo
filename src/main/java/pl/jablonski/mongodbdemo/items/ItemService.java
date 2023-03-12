@@ -1,4 +1,4 @@
-package pl.jablonski.mongodbdemo;
+package pl.jablonski.mongodbdemo.items;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +20,7 @@ class ItemService {
     ItemRepository repository;
     ItemMapper mapper;
 
-    Item createItem(final ItemDto itemDto) throws MalformedURLException {
+    Item createItem(final ItemDto itemDto) {
         return repository.save(mapper.toItem(itemDto));
     }
 
@@ -38,17 +37,17 @@ class ItemService {
         return repository.findByPhraseInDescription(phrase);
     }
 
-    List<Item> getItemsByCategory(final String category) {
+    List<Item> getItemsByCategory(final Category category) {
         return repository.findByCategory(category);
     }
 
-    long findCountOfItems() {
-        return repository.count();
+    Set<String> getAllFrameworks() {
+        Set<String> response = new HashSet<>();
+        repository.findAll().forEach(item -> response.addAll(item.getFrameworks()));
+        return response;
     }
 
-    public Set<String> getAllCategory() {
-        Set<String> response = new HashSet<>();
-        repository.findAll().forEach(item -> response.addAll(item.getCategory()));
-        return response;
+    List<Item> getItemByFramework(String framework) {
+        return repository.findByFramework(framework);
     }
 }

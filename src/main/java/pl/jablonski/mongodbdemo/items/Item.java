@@ -1,4 +1,4 @@
-package pl.jablonski.mongodbdemo;
+package pl.jablonski.mongodbdemo.items;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +20,6 @@ class Item {
     private UUID id;
     private String description;
     private URL link;
-    private Set<String> category;
+    private Category category;
+    private Set<String> frameworks;
 }

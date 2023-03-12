@@ -1,4 +1,4 @@
-package pl.jablonski.mongodbdemo;
+package pl.jablonski.mongodbdemo.items;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,5 +14,6 @@ class ItemDto {
 
     private String description;
     private String link;
-    private String category;
+    private Category category;
+    private String frameworks;
 }
