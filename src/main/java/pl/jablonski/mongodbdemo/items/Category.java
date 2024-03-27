@@ -1,5 +1,5 @@
 package pl.jablonski.mongodbdemo.items;
 
 public enum Category {
-    ARTICLE, YOUTUBE, WEBSITE
+    ARTICLE, FILM, WEBSITE, FORUM, BOOK, OTHER
 }

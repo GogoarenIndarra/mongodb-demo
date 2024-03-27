@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Items</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>View All Items</h2>
+            <a href="/" class="btn btn-default">Go Back to Home Page</a>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Short Description</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                    <th>Category</th>
+                    <th>Frameworks</th>
+                    <th>Actions</th> <!-- New column for buttons -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.shortDescription}"></td>
+                    <td th:text="${item.description}"></td>
+                    <td><a th:href="${item.link}" th:text="${item.link}">Link</a></td>
+                    <td th:text="${item.category}"></td>
+                    <td th:text="${item.frameworks}"></td>
+                    <td>
+                        <!-- Edit button -->
+                        <a th:href="@{/edit-item/{id}(id=${item.id})}" class="btn btn-primary">Edit</a>
+                        <!-- Delete button -->
+                        <form th:action="@{/delete-item/{id}(id=${item.id})}" method="delete" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <ul class="pagination">
+                <li th:class="${pageInfo.hasPreviousPage}? '' : 'disabled'">
+                    <a th:href="@{/(page=${pageInfo.pageNumber - 1})}">&laquo;</a>
+                </li>
+                <li th:each="page : ${#numbers.sequence(1, pageInfo.totalPages)}" th:class="${pageInfo.pageNumber == page}? 'active' : ''">
+                    <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                </li>
+                <li th:class="${pageInfo.hasNextPage}? '' : 'disabled'">
+                    <a th:href="@{/(page=${pageInfo.pageNumber + 1})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

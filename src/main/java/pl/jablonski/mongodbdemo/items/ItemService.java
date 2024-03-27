@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -29,8 +28,16 @@ class ItemService {
         log.info("Item with id: {}, was deleted.", id);
     }
 
+    Item getItemById(final UUID id) {
+        return repository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
+    }
+
     List<Item> showAllItems() {
         return repository.findAll();
+    }
+
+    Page<Item> findAllByPage(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     List<Item> getItemByName(final String phrase) {
@@ -48,6 +55,15 @@ class ItemService {
     }
 
     List<Item> getItemByFramework(String framework) {
-        return repository.findByFramework(framework);
+        return repository.findByFramework(framework.toLowerCase(Locale.ROOT));
+    }
+
+    Item update(UUID id, ItemDto itemDto) {
+        Item item = repository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
+        return repository.save(mapper.toItem(itemDto, item.getId()));
+    }
+
+    ItemDto mapToDto(Item item) {
+        return mapper.toItemDto(item);
     }
 }

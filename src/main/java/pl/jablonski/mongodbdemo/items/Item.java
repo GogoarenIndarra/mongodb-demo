@@ -18,6 +18,7 @@ class Item {
 
     @Id
     private UUID id;
+    private String shortDescription;
     private String description;
     private URL link;
     private Category category;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 class ItemDto {
 
+    private String shortDescription;
     private String description;
     private String link;
     private Category category;
