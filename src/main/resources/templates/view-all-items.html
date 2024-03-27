@@ -20,7 +20,7 @@
                     <th>Link</th>
                     <th>Category</th>
                     <th>Frameworks</th>
-                    <th>Actions</th> <!-- New column for buttons -->
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,9 +31,7 @@
                     <td th:text="${item.category}"></td>
                     <td th:text="${item.frameworks}"></td>
                     <td>
-                        <!-- Edit button -->
                         <a th:href="@{/edit-item/{id}(id=${item.id})}" class="btn btn-primary">Edit</a>
-                        <!-- Delete button -->
                         <form th:action="@{/delete-item/{id}(id=${item.id})}" method="delete" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
@@ -51,7 +49,8 @@
                     <a th:href="@{/view-all-items(page=${pageInfo.number - 1})}">Previous</a>
                 </li>
                 <li th:each="i : ${#numbers.sequence(0, pageInfo.totalPages - 1)}">
-                    <a th:href="@{/view-all-items(page=${i})}" th:text="${i + 1}" th:class="${i == pageInfo.number}? 'active' : ''"></a>
+                    <a th:href="@{/view-all-items(page=${i})}" th:text="${i + 1}"
+                       th:class="${i == pageInfo.number}? 'active' : ''"></a>
                 </li>
                 <li th:class="${!pageInfo.hasNext}? 'disabled' : ''">
                     <a th:href="@{/view-all-items(page=${pageInfo.number + 1})}">Next</a>

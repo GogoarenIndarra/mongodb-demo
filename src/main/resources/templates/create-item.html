@@ -28,12 +28,14 @@
                     <label for="category">Category:</label>
                     <select class="form-control" id="category" name="category" required>
                         <option th:each="category : ${T(pl.jablonski.mongodbdemo.items.Category).values()}"
-                                th:value="${category}" th:text="${category}">Category</option>
+                                th:value="${category}" th:text="${category}">Category
+                        </option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="frameworks">Frameworks (separated by comma):</label>
-                    <input type="text" class="form-control" id="frameworks" name="frameworks" placeholder="Java, Spring, Hibernate, ...">
+                    <input type="text" class="form-control" id="frameworks" name="frameworks"
+                           placeholder="Java, Spring, Hibernate, ...">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-primary">Clear</button>

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,7 +43,6 @@ public class ItemViewController {
         if (result.hasErrors()) {
             return "create-item";
         }
-
         var item = service.createItem(itemDto);
         return "redirect:/items/%s".formatted(item.getId().toString());
     }
@@ -56,8 +54,7 @@ public class ItemViewController {
         model.addAttribute("description", item.getDescription());
         model.addAttribute("link", item.getLink());
         model.addAttribute("category", item.getCategory());
-        model.addAttribute("frameworks", item.getFrameworks().stream()
-                .collect(Collectors.joining(", ")));
+        model.addAttribute("frameworks", String.join(", ", item.getFrameworks()));
         return "view-item";
     }
 
@@ -69,18 +66,13 @@ public class ItemViewController {
     }
 
 
-
     @GetMapping("/view-all-items")
     String getAllItemsWithPage(Model model,
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int sizePerPage) {
-        // Create Pageable object for pagination
+
         Pageable pageable = PageRequest.of(page, sizePerPage, Sort.Direction.DESC, "frameworks");
-
-        // Retrieve page of items using service method that returns Page<ItemDto>
         Page<Item> itemPage = service.findAllByPage(pageable);
-
-        // Add items and pageInfo to the model
         model.addAttribute("items", itemPage.getContent());
         model.addAttribute("pageInfo", itemPage);
 

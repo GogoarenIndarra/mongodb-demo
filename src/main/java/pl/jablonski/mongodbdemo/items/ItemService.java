@@ -8,7 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -58,9 +62,9 @@ class ItemService {
         return repository.findByFramework(framework.toLowerCase(Locale.ROOT));
     }
 
-    Item update(UUID id, ItemDto itemDto) {
+    void update(UUID id, ItemDto itemDto) {
         Item item = repository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
-        return repository.save(mapper.toItem(itemDto, item.getId()));
+        repository.save(mapper.toItem(itemDto, item.getId()));
     }
 
     ItemDto mapToDto(Item item) {

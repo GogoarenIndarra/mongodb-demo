@@ -15,11 +15,13 @@
 
                 <div class="form-group">
                     <label for="shortDescription">Short Description:</label>
-                    <input type="text" class="form-control" id="shortDescription" name="shortDescription" th:value="*{shortDescription}" required>
+                    <input type="text" class="form-control" id="shortDescription" name="shortDescription"
+                           th:value="*{shortDescription}" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea class="form-control" id="description" name="description" rows="4" th:text="*{description}"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="4"
+                              th:text="*{description}"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="link">Link:</label>
@@ -29,13 +31,16 @@
                     <label for="category">Category:</label>
                     <select class="form-control" id="category" name="category" required>
                         <option th:each="category : ${T(pl.jablonski.mongodbdemo.items.Category).values()}"
-                                th:value="${category}" th:text="${category}" th:selected="${category == itemDto.category}">Category</option>
+                                th:value="${category}" th:text="${category}"
+                                th:selected="${category == itemDto.category}">Category
+                        </option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="frameworks">Frameworks (separated by comma):</label>
-                    <input type="text" class="form-control" id="frameworks" name="frameworks" th:value="*{frameworks}" placeholder="Java, Spring, Hibernate, ...">
+                    <input type="text" class="form-control" id="frameworks" name="frameworks" th:value="*{frameworks}"
+                           placeholder="Java, Spring, Hibernate, ...">
                 </div>
                 <button type="submit" class="btn btn-primary">Sava</button>
                 <button type="reset" class="btn btn-primary">Clear</button>

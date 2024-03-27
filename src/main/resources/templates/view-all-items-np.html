@@ -20,7 +20,7 @@
                     <th>Link</th>
                     <th>Category</th>
                     <th>Frameworks</th>
-                    <th>Actions</th> <!-- New column for buttons -->
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,9 +31,7 @@
                     <td th:text="${item.category}"></td>
                     <td th:text="${item.frameworks}"></td>
                     <td>
-                        <!-- Edit button -->
                         <a th:href="@{/edit-item/{id}(id=${item.id})}" class="btn btn-primary">Edit</a>
-                        <!-- Delete button -->
                         <form th:action="@{/delete-item/{id}(id=${item.id})}" method="delete" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
