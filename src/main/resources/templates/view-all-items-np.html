@@ -41,25 +41,6 @@
                 </tr>
                 </tbody>
             </table>
-
-            <!-- Pagination -->
-            <ul class="pagination">
-                <li th:class="${pageInfo.first}? 'disabled' : ''">
-                    <a th:href="@{/view-all-items(page=0)}">&laquo;</a>
-                </li>
-                <li th:class="${!pageInfo.hasPrevious}? 'disabled' : ''">
-                    <a th:href="@{/view-all-items(page=${pageInfo.number - 1})}">Previous</a>
-                </li>
-                <li th:each="i : ${#numbers.sequence(0, pageInfo.totalPages - 1)}">
-                    <a th:href="@{/view-all-items(page=${i})}" th:text="${i + 1}" th:class="${i == pageInfo.number}? 'active' : ''"></a>
-                </li>
-                <li th:class="${!pageInfo.hasNext}? 'disabled' : ''">
-                    <a th:href="@{/view-all-items(page=${pageInfo.number + 1})}">Next</a>
-                </li>
-                <li th:class="${pageInfo.last}? 'disabled' : ''">
-                    <a th:href="@{/view-all-items(page=${pageInfo.totalPages - 1})}">&raquo;</a>
-                </li>
-            </ul>
         </div>
     </div>
 </div>

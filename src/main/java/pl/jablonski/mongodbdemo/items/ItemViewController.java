@@ -3,6 +3,7 @@ package pl.jablonski.mongodbdemo.items;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -64,25 +65,25 @@ public class ItemViewController {
     String searchItem(@RequestParam String input1, Model model) {
         var items = service.getItemByName(input1);
         model.addAttribute("items", items);
-        return "view-all-items";
+        return "view-all-items-np";
     }
 
-    @GetMapping("/view-all-items")
-    String getAllItems(Model model) {
-        var items = service.showAllItems();
-        model.addAttribute("items", items);
-        return "view-all-items";
-    }
+
 
     @GetMapping("/view-all-items")
     String getAllItemsWithPage(Model model,
                                @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int sizePerPage,
-                               @RequestParam(defaultValue = "ID") Category sortField,
-                               @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection) {
-        Pageable pageable = PageRequest.of(page, sizePerPage, sortDirection, sortField.name());
-        var items = service.findAllByPage(pageable);
-        model.addAttribute("items", items);
+                               @RequestParam(defaultValue = "5") int sizePerPage) {
+        // Create Pageable object for pagination
+        Pageable pageable = PageRequest.of(page, sizePerPage, Sort.Direction.DESC, "frameworks");
+
+        // Retrieve page of items using service method that returns Page<ItemDto>
+        Page<Item> itemPage = service.findAllByPage(pageable);
+
+        // Add items and pageInfo to the model
+        model.addAttribute("items", itemPage.getContent());
+        model.addAttribute("pageInfo", itemPage);
+
         return "view-all-items";
     }
 

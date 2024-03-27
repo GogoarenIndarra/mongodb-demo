@@ -36,7 +36,7 @@ class ItemService {
         return repository.findAll();
     }
 
-    Page<Item> findAllByPage(Pageable pageable) {
+    public Page<Item> findAllByPage(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
