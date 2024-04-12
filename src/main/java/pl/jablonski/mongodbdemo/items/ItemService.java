@@ -8,11 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,7 +40,7 @@ class ItemService {
         return repository.findAll();
     }
 
-    public Page<Item> findAllByPage(Pageable pageable) {
+    Page<Item> findAllByPage(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
@@ -48,14 +48,20 @@ class ItemService {
         return repository.findByPhraseInDescription(phrase);
     }
 
+    List<Item> getItemsByCategoryAndSearchPhrase(final Category category, final String phrase) {
+        return repository.findByPhraseInDescription(phrase).stream()
+                .filter(item -> item.getCategory().equals(category))
+                .collect(Collectors.toList());
+    }
+
     List<Item> getItemsByCategory(final Category category) {
         return repository.findByCategory(category);
     }
 
     Set<String> getAllFrameworks() {
-        Set<String> response = new HashSet<>();
-        repository.findAll().forEach(item -> response.addAll(item.getFrameworks()));
-        return response;
+        return repository.findAll().stream()
+                .flatMap(item -> item.getFrameworks().stream())
+                .collect(Collectors.toSet());
     }
 
     List<Item> getItemByFramework(String framework) {

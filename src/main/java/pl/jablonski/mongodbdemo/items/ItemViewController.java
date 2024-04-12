@@ -3,6 +3,7 @@ package pl.jablonski.mongodbdemo.items;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Slf4j
 public class ItemViewController {
 
     ItemService service;
@@ -34,14 +36,14 @@ public class ItemViewController {
     @GetMapping("/create-item")
     String addItem(Model model) {
         model.addAttribute("itemDto", new ItemDto());
-        return "create-item";
+        return "items/create-item";
     }
 
     @PostMapping("/create-item")
     String addItem(@Validated @ModelAttribute("itemDto") ItemDto itemDto, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "create-item";
+            return "items/create-item";
         }
         var item = service.createItem(itemDto);
         return "redirect:/items/%s".formatted(item.getId().toString());
@@ -55,14 +57,15 @@ public class ItemViewController {
         model.addAttribute("link", item.getLink());
         model.addAttribute("category", item.getCategory());
         model.addAttribute("frameworks", String.join(", ", item.getFrameworks()));
-        return "view-item";
+        return "items/view-item";
     }
 
     @GetMapping("/search-item")
-    String searchItem(@RequestParam String input1, Model model) {
-        var items = service.getItemByName(input1);
+    String searchItem(@RequestParam Category category, @RequestParam String input1, Model model) {
+        log.info("Category: {}, input1: {}", category, input1);
+        var items = service.getItemsByCategoryAndSearchPhrase(category, input1);
         model.addAttribute("items", items);
-        return "view-all-items-np";
+        return "items/view-all-items-np";
     }
 
 
@@ -76,7 +79,7 @@ public class ItemViewController {
         model.addAttribute("items", itemPage.getContent());
         model.addAttribute("pageInfo", itemPage);
 
-        return "view-all-items";
+        return "items/view-all-items";
     }
 
     @GetMapping("/delete-item/{id}")
@@ -90,7 +93,7 @@ public class ItemViewController {
         Item item = service.getItemById(UUID.fromString(itemId));
         ItemDto itemDto = service.mapToDto(item);
         model.addAttribute("itemDto", itemDto);
-        return "update-item";
+        return "items/update-item";
     }
 
     @PostMapping("/edit-item/{id}")
@@ -99,7 +102,7 @@ public class ItemViewController {
                       BindingResult result) {
 
         if (result.hasErrors()) {
-            return "update-item";
+            return "items/update-item";
         }
         service.update(UUID.fromString(itemId), itemDto);
         return "redirect:/items/%s".formatted(itemId);

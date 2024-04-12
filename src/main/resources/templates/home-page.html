@@ -15,15 +15,34 @@
             <div class="list-group">
                 <a href="/create-item" class="list-group-item">Create New Item</a>
                 <a href="/view-all-items" class="list-group-item">View All Items</a>
+
+                <!--                <form action="/search-item" method="get" class="form-inline">-->
+                <!--                    <div class="input-group">-->
+                <!--                        <input type="text" class="form-control" id="input1" name="input1"-->
+                <!--                               placeholder="Search for Item...">-->
+                <!--                        <span class="input-group-btn">-->
+                <!--                                <button class="btn btn-default" type="submit">Search Item</button>-->
+                <!--                            </span>-->
+                <!--                    </div>-->
+                <!--                </form>-->
+
                 <form action="/search-item" method="get" class="form-inline">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="input1" name="input1"
-                               placeholder="Search for Item...">
+                        <label for="category" class="input-group-addon">Search:</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option th:each="category : ${T(pl.jablonski.mongodbdemo.items.Category).values()}"
+                                    th:value="${category}" th:text="${category}">Category
+                            </option>
+                        </select>
+                        <input type="text" class="form-control" id="input1" name="input1" placeholder="Search for Item...">
                         <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">Search Item</button>
-                            </span>
+                            <button class="btn btn-default" type="submit">Search Item</button>
+                        </span>
                     </div>
                 </form>
+
+                <a href="/create-question" class="list-group-item">Create New Question</a>
+                <a href="/view-all-questions" class="list-group-item">View All Questions</a>
             </div>
         </div>
     </div>

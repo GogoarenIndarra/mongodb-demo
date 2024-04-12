@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Question</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2>View Question</h2>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p><strong>Question:</strong> <span th:text="${question}"></span></p>
+                    <p><strong>Answer:</strong> <span th:text="${answer}"></span></p>
+                    <p><strong>Category:</strong> <span th:text="${category}"></span></p>
+                    <p><strong>Link:</strong> <span th:text="${link}"></span></p>
+                </div>
+            </div>
+            <a href="/" class="btn btn-default">Go Back to Home Page</a>
+            <a href="/view-all-questions" class="btn btn-default">Go Back to All Questions View</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
