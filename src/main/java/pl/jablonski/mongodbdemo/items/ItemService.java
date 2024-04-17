@@ -44,14 +44,8 @@ class ItemService {
         return repository.findAll(pageable);
     }
 
-    List<Item> getItemByName(final String phrase) {
-        return repository.findByPhraseInDescription(phrase);
-    }
-
-    List<Item> getItemsByCategoryAndSearchPhrase(final Category category, final String phrase) {
-        return repository.findByPhraseInDescription(phrase).stream()
-                .filter(item -> item.getCategory().equals(category))
-                .collect(Collectors.toList());
+    List<Item> getItemsByCategoryAndSearchPhrase(final String framework, final String phrase) {
+        return repository.findByPhraseInDescription(framework, phrase);
     }
 
     List<Item> getItemsByCategory(final Category category) {

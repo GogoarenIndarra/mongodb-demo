@@ -71,8 +71,8 @@ public class QuestionController {
 
     @GetMapping("/view-all-questions")
     String getAllQuestionsWithPage(Model model,
-                               @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int sizePerPage) {
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "5") int sizePerPage) {
 
         Pageable pageable = PageRequest.of(page, sizePerPage, Sort.Direction.DESC, "category");
         Page<Question> questionPage = questionService.findAllByPage(pageable);
@@ -102,14 +102,21 @@ public class QuestionController {
 
     @PostMapping("/edit-question/{id}")
     String updateQuestion(@PathVariable("id") String questionId,
-                      @Validated @ModelAttribute("questionDto") QuestionDto questionDto,
-                      BindingResult result) {
+                          @Validated @ModelAttribute("questionDto") QuestionDto questionDto,
+                          BindingResult result) {
 
         if (result.hasErrors()) {
             return "questions/update-question";
         }
         questionService.update(UUID.fromString(questionId), questionDto);
         return "redirect:/questions/%s".formatted(questionId);
+    }
+
+    @GetMapping("/search-questions")
+    String searchQuestion(@RequestParam Category category, Model model) {
+        var questions = questionService.getByCategory(category);
+        model.addAttribute("questions", questions);
+        return "questions/view-all-questions-np";
     }
 }
 
@@ -138,10 +145,6 @@ class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    public List<Question> findByCategoryAndSearchPhrase(Category category, String phrase) {
-        return questionRepository.findByPhraseInDescriptionAndCategory(category, phrase);
-    }
-
     public void deleteQuestion(UUID questionId) {
         questionRepository.deleteById(questionId);
         log.info("Question with id: {}, was deleted.", questionId);
@@ -155,13 +158,17 @@ class QuestionService {
     public QuestionDto mapToDto(Question question) {
         return questionMapper.mapToDto(question);
     }
+
+    public List<Question> getByCategory(Category category) {
+        return questionRepository.findByCategory(category);
+    }
 }
 
 @Repository
 interface QuestionRepository extends MongoRepository<Question, UUID> {
 
-    @Query("{ question: { $regex: ?0, $options: 'i' }, category: ?0 }")
-    List<Question> findByPhraseInDescriptionAndCategory(Category category, String phrase);
+    @Query("{ category: ?0 }")
+    List<Question> findByCategory(Category category);
 }
 
 @Document("questions")
@@ -185,6 +192,9 @@ enum Category {
     ALGORITHMS,
     DESIGN_PATTERNS,
     TESTING,
+    MICROSERVICES,
+    KAFKA,
+    DOCKER,
     OTHER
 }
 

@@ -18,6 +18,8 @@ interface ItemRepository extends MongoRepository<Item, UUID> {
     @Query("{ frameworks: ?0 }")
     List<Item> findByFramework(String frameworks);
 
-    @Query("{ description: { $regex: ?0, $options: 'i' } }")
-    List<Item> findByPhraseInDescription(String phrase);
+    @Query("{ description: { $regex: ?1, $options: 'i' }, frameworks: ?0 }")
+    List<Item> findByPhraseInDescription(String framework, String phrase);
+
+
 }

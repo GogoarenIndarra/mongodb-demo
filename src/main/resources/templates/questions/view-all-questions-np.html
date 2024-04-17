@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Questions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>View All Questions</h2>
+            <a href="/" class="btn btn-default">Go Back to Home Page</a>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Link</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="question : ${questions}">
+                    <td th:text="${question.question}"></td>
+                    <td th:text="${question.answer}"></td>
+                    <td><a th:href="@{${question.link}}" target="_blank" th:text="LINK">LINK</a></td>
+                    <td th:text="${question.category}"></td>
+                    <td>
+                        <a th:href="@{/edit-question/{id}(id=${question.id})}" class="btn btn-primary">Edit</a>
+                        <form th:action="@{/delete-question/{id}(id=${question.id})}" method="delete" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

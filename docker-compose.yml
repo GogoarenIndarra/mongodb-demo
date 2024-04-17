@@ -1,0 +1,9 @@
+version: '3.5'
+services:
+  mongodb-demo:
+    container_name: mongodb-demo
+    build:
+      dockerfile: Dockerfile
+    image: mongodb-demo:latest
+    ports:
+      - 8090:8080

@@ -32,19 +32,16 @@ public class ItemController {
         return service.getAllFrameworks();
     }
 
-    @GetMapping("/name/{phrase}")
-    List<Item> getItemByPhase(@PathVariable final String phrase) {
-        return service.getItemByName(phrase);
-    }
+
 
     @GetMapping("/category/{category}")
     List<Item> getItemByCategory(@PathVariable final Category category) {
         return service.getItemsByCategory(category);
     }
 
-    @GetMapping("/frameworks/{framework}")
-    List<Item> getItemByFrameworks(@PathVariable final String framework) {
-        return service.getItemByFramework(framework);
+    @GetMapping("/search")
+    List<Item> getItemByFrameworks(@RequestParam final String framework, @RequestParam final String phrase) {
+        return service.getItemsByCategoryAndSearchPhrase(framework, phrase);
     }
 
     @PostMapping

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -30,6 +31,8 @@ public class ItemViewController {
 
     @GetMapping({"/", "home"})
     String home(Model model) {
+        Set<String> frameworks = service.getAllFrameworks();
+        model.addAttribute("frameworks", frameworks);
         return "home-page";
     }
 
@@ -61,9 +64,9 @@ public class ItemViewController {
     }
 
     @GetMapping("/search-item")
-    String searchItem(@RequestParam Category category, @RequestParam String input1, Model model) {
-        log.info("Category: {}, input1: {}", category, input1);
-        var items = service.getItemsByCategoryAndSearchPhrase(category, input1);
+    String searchItem(@RequestParam String framework, Model model) {
+        log.info("Search by Framework: {}}", framework);
+        var items = service.getItemByFramework(framework.toLowerCase());
         model.addAttribute("items", items);
         return "items/view-all-items-np";
     }
