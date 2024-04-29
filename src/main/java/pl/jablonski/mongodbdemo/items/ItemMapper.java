@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ class ItemMapper {
                             .map(String::trim)
                             .map(item -> item.toLowerCase(Locale.ROOT))
                             .collect(Collectors.toSet()))
+                    .createdAt(LocalDateTime.now())
                     .build();
         } catch (MalformedURLException | URISyntaxException exception) {
             log.error("MalformedURLException | URISyntaxException occur, exc msg: {}", exception.getMessage());
@@ -46,6 +48,7 @@ class ItemMapper {
                             .map(String::trim)
                             .map(item -> item.toLowerCase(Locale.ROOT))
                             .collect(Collectors.toSet()))
+                    .createdAt(dto.getCreatedAt())
                     .build();
         } catch (MalformedURLException | URISyntaxException exception) {
             log.error("MalformedURLException | URISyntaxException occur, exc msg: {}", exception.getMessage());
@@ -60,6 +63,7 @@ class ItemMapper {
                 .link(item.getLink().toString())
                 .category(item.getCategory())
                 .frameworks(String.join(", ", item.getFrameworks()))
+                .createdAt(item.getCreatedAt())
                 .build();
     }
 }

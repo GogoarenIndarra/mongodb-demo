@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev
+---
+# DEV - properties
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  data:
+    mongodb:
+      uri: mongodb+srv://${spring.data.mongodb.database}:${spring.data.mongodb.password}@mongodbpj.gv3zbus.mongodb.net/?retryWrites=true&w=majority
+      database: mongodbpj
+      password: your_secret_password
+---
+#TEST - properties
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/testdb
+      database: testdb
+      password: pass

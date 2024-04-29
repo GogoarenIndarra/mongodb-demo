@@ -1,5 +1,6 @@
 package pl.jablonski.mongodbdemo.items;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

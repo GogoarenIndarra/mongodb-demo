@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,20 +37,8 @@ class ItemService {
         return repository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
     }
 
-    List<Item> showAllItems() {
-        return repository.findAll();
-    }
-
     Page<Item> findAllByPage(Pageable pageable) {
         return repository.findAll(pageable);
-    }
-
-    List<Item> getItemsByCategoryAndSearchPhrase(final String framework, final String phrase) {
-        return repository.findByPhraseInDescription(framework, phrase);
-    }
-
-    List<Item> getItemsByCategory(final Category category) {
-        return repository.findByCategory(category);
     }
 
     Set<String> getAllFrameworks() {

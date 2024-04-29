@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "mongo-app",
+  "version": "1.0",
+  "description": "MongoDB App to add Items to the database",
+  "permissions": ["activeTab"],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  }
+}

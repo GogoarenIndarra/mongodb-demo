@@ -65,7 +65,7 @@ public class ItemViewController {
 
     @GetMapping("/search-item")
     String searchItem(@RequestParam String framework, Model model) {
-        log.info("Search by Framework: {}}", framework);
+        log.info("Search by Framework: {}", framework);
         var items = service.getItemByFramework(framework.toLowerCase());
         model.addAttribute("items", items);
         return "items/view-all-items-np";
@@ -77,7 +77,7 @@ public class ItemViewController {
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int sizePerPage) {
 
-        Pageable pageable = PageRequest.of(page, sizePerPage, Sort.Direction.DESC, "frameworks");
+        Pageable pageable = PageRequest.of(page, sizePerPage, Sort.Direction.DESC, "createdAt");
         Page<Item> itemPage = service.findAllByPage(pageable);
         model.addAttribute("items", itemPage.getContent());
         model.addAttribute("pageInfo", itemPage);

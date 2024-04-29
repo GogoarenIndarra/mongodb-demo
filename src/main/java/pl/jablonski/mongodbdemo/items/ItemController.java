@@ -1,57 +1,97 @@
 package pl.jablonski.mongodbdemo.items;
 
-import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequestMapping("/api/items")
 public class ItemController {
 
-    ItemService service;
+    private final ItemService service;
 
-    @GetMapping("/all")
-    List<Item> getAllItems() {
-        return service.showAllItems();
+    @CrossOrigin
+    @PostMapping("/api/items/add-item")
+    void addItem(@RequestBody String url) {
+        log.info("Request from EXTENSION: {}", url);
+        try {
+            ItemDto itemDto = createItemBaseOnUrl(url);
+            service.createItem(itemDto);
+        } catch (Exception e) {
+            log.error("Error during creating item: {}", e.getMessage());
+            throw new CreatingItemException("Error during creating item");
+        }
     }
 
-    @GetMapping("/category/all")
-    Category[] getAllCategory() {
-        return Category.values();
+    public ItemDto createItemBaseOnUrl(final String url) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        String html = response.getBody();
+        Document doc = Jsoup.parse(html);
+
+        Element titleElement = doc.select("title").first();
+        String title = titleElement.text();
+
+        Elements metaElements = doc.select("meta[name=description]");
+        String description = metaElements.first().attr("content");
+
+        Elements keywordElements = doc.select("meta[name=keywords]");
+        String[] tags = new String[0];
+        for (Element keywordElement : keywordElements) {
+            tags = keywordElement.attr("content").split(",");
+        }
+
+        return ItemDto.builder()
+                .shortDescription(title)
+                .description(description)
+                .link(url)
+                .frameworks(String.join(", ", tags))
+                .build();
     }
+}
 
-    @GetMapping("/frameworks/all")
-    Set<String> getAllFrameworks() {
-        return service.getAllFrameworks();
+class CreatingItemException extends RuntimeException {
+    CreatingItemException(String message) {
+        super(message);
     }
+}
 
+@RestControllerAdvice
+class RestExceptionHandler {
 
-
-    @GetMapping("/category/{category}")
-    List<Item> getItemByCategory(@PathVariable final Category category) {
-        return service.getItemsByCategory(category);
+    @ExceptionHandler(CreatingItemException.class)
+    public ResponseEntity<ExceptionResponse> restExceptionHandler(final CreatingItemException exception) {
+        return new ResponseEntity<>(ExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value()).build(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
-    @GetMapping("/search")
-    List<Item> getItemByFrameworks(@RequestParam final String framework, @RequestParam final String phrase) {
-        return service.getItemsByCategoryAndSearchPhrase(framework, phrase);
-    }
-
-    @PostMapping
-    Item addItem(@RequestBody final ItemDto itemDto) {
-        return service.createItem(itemDto);
-    }
-
-    @DeleteMapping("/{id}")
-    void deleteItem(@PathVariable final UUID id) {
-        service.deleteItem(id);
-    }
+@Builder
+@Getter
+class ExceptionResponse {
+    private int status;
+    private String message;
 }
 

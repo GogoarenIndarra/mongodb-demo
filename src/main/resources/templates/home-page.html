@@ -15,17 +15,56 @@
             <div class="list-group">
                 <a href="/create-item" class="list-group-item">Create New Item</a>
                 <a href="/view-all-items" class="list-group-item">View All Items</a>
+
                 <form action="/search-item" method="get" class="form-inline">
                     <div class="input-group">
                         <label for="framework" class="input-group-addon">Search by framework:</label>
-                        <select class="form-control" id="framework" name="framework" required>
-                            <option th:each="framework : ${frameworks}" th:value="${framework}" th:text="${framework}">Framework</option>
-                        </select>
+                        <!-- Replace the select element with an input element -->
+                        <input class="form-control" id="frameworkInput" list="frameworkList" name="framework" required>
+                        <!-- Define the datalist for auto-completion options -->
+                        <datalist id="frameworkList">
+                            <!-- Options will be populated dynamically -->
+                        </datalist>
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">Search Item</button>
-                        </span>
+            <button class="btn btn-default" type="submit">Search Item</button>
+        </span>
                     </div>
                 </form>
+
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    // Get reference to the input element
+                    var input = document.getElementById('frameworkInput');
+
+                    // Get reference to the datalist
+                    var dataList = document.getElementById('frameworkList');
+
+                    // Define the list of frameworks fetched from the backend using Thymeleaf
+                    var frameworks = /*[[${frameworks}]]*/ [];
+
+                    // Function to update the datalist with matching options
+                    function updateOptions() {
+                        // Clear existing options
+                        dataList.innerHTML = '';
+
+                        // Filter frameworks based on input value
+                        var inputValue = input.value.toLowerCase();
+                        var filteredFrameworks = frameworks.filter(function(framework) {
+                            return framework.toLowerCase().startsWith(inputValue);
+                        });
+
+                        // Add matching options to the datalist
+                        filteredFrameworks.forEach(function(framework) {
+                            var option = document.createElement('option');
+                            option.value = framework;
+                            dataList.appendChild(option);
+                        });
+                    }
+
+                    // Call updateOptions function on input event
+                    input.addEventListener('input', updateOptions);
+                    /*]]>*/
+                </script>
 
 
                 <a href="/create-question" class="list-group-item">Create New Question</a>

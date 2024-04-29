@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +19,5 @@ class ItemDto {
     private String link;
     private Category category;
     private String frameworks;
+    private LocalDateTime createdAt;
 }
