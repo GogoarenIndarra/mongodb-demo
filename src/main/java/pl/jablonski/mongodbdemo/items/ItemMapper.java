@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.UUID;
@@ -15,6 +16,12 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 class ItemMapper {
+
+    private final Clock clock;
+
+    ItemMapper(Clock clock) {
+        this.clock = clock;
+    }
 
     Item toItem(final ItemDto dto) {
         try {
@@ -28,7 +35,7 @@ class ItemMapper {
                             .map(String::trim)
                             .map(item -> item.toLowerCase(Locale.ROOT))
                             .collect(Collectors.toSet()))
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now(clock))
                     .build();
         } catch (MalformedURLException | URISyntaxException exception) {
             log.error("MalformedURLException | URISyntaxException occur, exc msg: {}", exception.getMessage());
